@@ -4,14 +4,14 @@ import PokeListView from './PokeListView';
 import styles from './App.module.css';
 
 function PokeSearch() {
-    //For displaying PokeStatsView
     const [pokemon, setPokemon] = useState('');
     const [pokedex, setPokedex] = useState({});
+    //stop undefined error type={pokedex.types[0].type.name} 
     const [pokedexType, setPokedexType] = useState(''); 
     const [pokedexSprite, setPokedexSprite] = useState(''); 
     const [viewstats, setViewstats] = useState(false);
 
-    //For PokeListView
+    //Going thru da pokemanz
     const [pokelist, setPokelist] = useState([]);
     const [pokebatch, setPokebatch] = useState("https://pokeapi.co/api/v2/pokemon?limit=6");
     const [nextPokebatch, setNextPokebatch] = useState();
@@ -19,6 +19,7 @@ function PokeSearch() {
     const [spriteoffset, setSpriteoffset] = useState(0);
     const [loading, setLoading] = useState(true);
     const [nofind, setNofind] = useState(false);
+    const [inputvalue, setInputvalue] = useState('');
 
     //Generates a batch of 6 pokemon to be selected
     useEffect(() => {
@@ -33,11 +34,10 @@ function PokeSearch() {
                 setPrevPokebatch(apiData.previous)
             } catch (error) {
                 console.log(error);
-                setLoading(false);
             }
         }
         getPokelist();
-    }, [pokebatch]) //renders list when the pokebatch updates
+    }, [pokebatch]) //only renders when the pokebatch changes
     
     //Search for a specific Pokemon
     async function getPokesearch() {
@@ -50,6 +50,7 @@ function PokeSearch() {
             setPokedexType(apiData.types[0].type.name);
             setPokedexSprite(apiData.sprites["front_default"]);
             setViewstats(true);
+            setInputvalue('');
         } catch (error) {
             console.log(error);
             setLoading(false);
@@ -76,6 +77,14 @@ function PokeSearch() {
         setViewstats(false);
     }
 
+    //Takes Pokemon from the list to be searched
+    function listbutton(e) {
+        setPokemon(e.target.value);
+        setInputvalue(e.target.value);
+        console.log(pokemon);
+        //handleSubmit();
+    }
+
     //Searches for Pokemon
     function handleSubmit() {
         getPokesearch();
@@ -99,7 +108,7 @@ function PokeSearch() {
             {/* Search Form */}
             {!viewstats && <form action="#" onSubmit={handleSubmit}>
                 <label htmlFor="pokemon" >Find your Pokemon: </label>
-                <input type="text" id="poke" placeholder="e.g. Squirtle, Mew" onChange={handleChange} className={styles.input}/>
+                <input type="text" id="poke" placeholder="e.g. Squirtle, Mew" value={inputvalue} onChange={handleChange} className={styles.input}/>
                 <input type="submit" value="Search" className={styles.button}/>
             </form>}
             
@@ -109,6 +118,7 @@ function PokeSearch() {
                 spriteoffset={spriteoffset}
                 nextbatch={nextPokebatch ? nextbatch : null}
                 prevbatch={prevPokebatch ? prevbatch: null}
+                listbutton={listbutton}
             />}
 
             {/* Show a Pokemon's stats */}

@@ -1,13 +1,12 @@
 import styles from './App.module.css';
 
-function PokeListView({ pokelist, nextbatch, prevbatch, spriteoffset }) {
+function PokeListView({ pokelist, nextbatch, prevbatch, spriteoffset, listbutton }) {
     return (
         <div>
             <div className={styles.pokelist}>
                 {pokelist.map(pokemon => (
                     <div key={pokemon} className={styles.pokefloat}>
-                        <button className={styles.tinybutton} value={pokemon}>{pokemon}</button>
-                        {/* originally able to click button to search pokemon... but had issue */}
+                        <button className={styles.tinybutton} onClick={listbutton} value={pokemon}>{pokemon}</button>
                         <br/>
                         <img className={styles.tinyimage} src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokelist.indexOf(pokemon) + spriteoffset + 1}.png`} alt={pokemon} />
                     </div>
